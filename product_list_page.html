@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!--DUE TO THE NEED TO REQUEST CROSS DOMAIN DATA, I ATTEMPTED AN AJAX CALL RETURNING JSONP,
+    BUT RECEIVED A 500 ERROR. DUE TO THIS, I RECOMMEND RUNNING ON CHROME (SINCE THAT IS WHAT
+    I TESTED IN) WHILE DISABLING WEB SECURITY TO ALLOW FOR CROSS DOMAIN REQUESTS.-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Taylor Sampson - Interview Test</title>
+<link rel="stylesheet" type="text/css" href="assets/css/reset.css" />
+</head>
+
+<body>
+
+<div id="hero"></div>
+
+<div class="row">
+<div class="thumb"></div>
+<div class="thumb"></div>
+<div class="thumb"></div>
+</div>
+
+<div class="row">
+<div class="thumb"></div>
+<div class="thumb"></div>
+<div class="thumb"></div>
+</div>
+
+<div class="row">
+<div class="thumb"></div>
+<div class="thumb"></div>
+</div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+// Your Code
+
+$(function(){
+
+
+//LINK TO LOWES DB
+  var link = "http://m.lowes.com/IntegrationServices/resources/productList/json/v3_0/4294857975?langId=-1&storeId=10702&catalogId=10051&nValue=4294857975&storeNumber=0595&pageSize=20&firstRecord=0&refinements=5003703";
+
+
+//PASSING LINK, RETURNING DATA AS "OBJ"
+//  $.getJSON(link + "?callback=?", function(obj){
+
+    $.ajax({
+  type:     "GET",
+  url:      link,
+  dataType: "jsonp",
+  success: function(obj){
+    
+
+      $(".thumb").each(function(i) {
+          $(this).prepend('<img src="' + obj.ProductsList[i].imageURLs.sm  + '"/></br></br>');
+          $(this).append("<p class='desc'>" + obj.ProductsList[i].ProductInfo.Brand + " " + obj.ProductsList[i].ProductInfo.p_product_description + "</p></br></br>");
+          $(this).append("<p class=price>$"+parseFloat(obj.ProductsList[i].ProductInfo.p_product_price).toFixed(2)+"</p>");
+          $(this).append("<button type='button' href='#'>View More</button>");
+
+
+
+// I HAVE INCLUDED A FUNCTION TO SWITCH THE ITEM IN THE MASTHEAD BY SIMPLY CLICKING THE "VIEW MORE" BUTTON
+// THE HOVER FUNCTION WORKS PROPERLY, HOWEVER FELT ODD WITH A NON-FUNCTIONING "VIEW MORE" BUTTON PRESENT
+// ON THE PAGE. UNCOMMENTING THIS FUNCTION WILL ALLOW THE "VIEW MORE" BUTTON TO CHANGE THE MASTHEAD CONTENT
+// AS WELL.
+
+          // $(this).find("button").click(function(){
+          //   $("#hero").css("visibility", "visible");
+          //   $("#hero").html('<img id = "bigpic" src="' + obj.ProductsList[i].imageURLs.lg  + '"/></br></br>');
+          //   $("#hero").prepend("<p id = 'herodesc'>" + obj.ProductsList[i].ProductInfo.Brand + " " + obj.ProductsList[i].ProductInfo.p_product_description + "</p>");
+          //   $("#herodesc").append("<br><br><li> Rating: " + parseFloat(obj.ProductsList[i].ProductInfo.p_product_rating).toFixed(2) +" / 5.00</li>");
+          //   $("#herodesc").append("<li>Product ID: " + obj.ProductsList[i].ProductInfo.p_product_id +"</li>");
+          //   $("#hero").prepend("<button id='cart' type='button' href='#'>Add To Cart</button>");
+          //   $("#cart").click(function(){
+          //     alert("The item total is $" + parseFloat(obj.ProductsList[i].ProductInfo.p_product_price).toFixed(2));
+          //   });
+          //   $("#cart").after("<p id='pricemain'>$" + parseFloat(obj.ProductsList[i].ProductInfo.p_product_price).toFixed(2)+"</p>");
+          //
+          // });
+
+
+          $(this).find("img, p, button").mouseover(function(){
+            $("#hero").css("visibility", "visible");
+            $("#hero").html('<img id = "bigpic" src="' + obj.ProductsList[i].imageURLs.lg  + '"/></br></br>');
+            $("#hero").prepend("<p id = 'herodesc'>" + obj.ProductsList[i].ProductInfo.Brand + " " + obj.ProductsList[i].ProductInfo.p_product_description + "</p>");
+            $("#herodesc").append("<br><br><li> Rating: " + parseFloat(obj.ProductsList[i].ProductInfo.p_product_rating).toFixed(2) +" / 5.00</li>");
+            $("#herodesc").append("<li>Product ID: " + obj.ProductsList[i].ProductInfo.p_product_id +"</li>");
+            $("#hero").prepend("<button id='cart' type='button' href='#'>Add To Cart</button>");
+            $("#cart").click(function(){
+              alert("The item total is $" + parseFloat(obj.ProductsList[i].ProductInfo.p_product_price).toFixed(2));
+            });
+            $("#cart").after("<p id='pricemain'>$" + parseFloat(obj.ProductsList[i].ProductInfo.p_product_price).toFixed(2)+"</p>");
+
+          });
+    });
+  }
+});
+});
+
+
+</script>
+</body>
+</html>
